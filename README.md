@@ -7,7 +7,9 @@ This repository has C implementations of the [Computer Science Roadmap](https://
 You need to have gcc installed.
 
 ```sh
-https://github.com/AndreyArthur/computer-science-roadmap-c
+git clone https://github.com/AndreyArthur/computer-science-roadmap-c
+
+cd ./computer-science-roadmap-c
 
 chmod +x ./run.sh
 ```
