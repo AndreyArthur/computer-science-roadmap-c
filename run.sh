@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+if [ ! -s ./main.c ]; then
+  echo '#include <stdio.h>
+
+int main() {
+  printf("Hello, World!\n");
+  return 0;
+}' > ./main.c
+fi
+
+rm -rf ./__main
+gcc -o __main main.c && ./__main
+rm -rf ./__main
