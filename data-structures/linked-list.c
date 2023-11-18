@@ -8,21 +8,25 @@ struct Node {
 
 struct List {
   struct Node *head;
+  struct Node *(*get)(struct List *list, int position);
+  void(*push)(struct List *list, int value);
+  void(*unshift)(struct List *list, int value);
+  void(*insert)(struct List *list, int position, int value);
+  void(*delete)(struct List *list, int position);
+  int(*length)(struct List *list);
+  void(*print)(struct List *list);
+  void(*free)(struct List *list);
+  void(*concat)(struct List *first_list, struct List *second_list);
+  void(*reverse)(struct List *list);
 };
 
-struct List *new_list(struct Node *head) {
-  struct List *list = malloc(sizeof(struct List));
-  list->head = head;
-  return list;
-}
-
-struct Node *new_node(int value) {
+struct Node *create_node(int value) {
   struct Node *node = malloc(sizeof(struct Node));
   node->value = value;
   return node;
 }
 
-struct Node *get(struct List *list, int position) {
+struct Node *_list_get(struct List *list, int position) {
   if (position < 0) {
     return NULL;
   }
@@ -39,36 +43,36 @@ struct Node *get(struct List *list, int position) {
   return node;
 }
 
-void push(struct List *list, int value) {
+void _list_push(struct List *list, int value) {
   struct Node *node = list->head;
   while (node->next != NULL) {
     node = node->next;
   }
-  node->next = new_node(value);
+  node->next = create_node(value);
 }
 
-void unshift(struct List *list, int value) {
-  struct Node *node = new_node(value);
+void _list_unshift(struct List *list, int value) {
+  struct Node *node = create_node(value);
   node->next = list->head;
   list->head = node;
 }
 
-void insert(struct List *list, int position, int value) {
+void _list_insert(struct List *list, int position, int value) {
   if (position <= 0) {
-    unshift(list, value);
+    _list_unshift(list, value);
     return;
   }
-  struct Node *node_before_position = get(list, position - 1);
+  struct Node *node_before_position = _list_get(list, position - 1);
   if (node_before_position == NULL || node_before_position->next == NULL) {
-    push(list, value);
+    _list_push(list, value);
     return;
   }
-  struct Node *node_to_be_inserted = new_node(value);
+  struct Node *node_to_be_inserted = create_node(value);
   node_to_be_inserted->next = node_before_position->next;
   node_before_position->next = node_to_be_inserted;
 }
 
-void delete(struct List *list, int position) {
+void _list_delete(struct List *list, int position) {
   if (position < 0) {
     return;
   }
@@ -78,7 +82,7 @@ void delete(struct List *list, int position) {
     free(head);
     return;
   }
-  struct Node *node_before_position = get(list, position - 1);
+  struct Node *node_before_position = _list_get(list, position - 1);
   if (node_before_position == NULL || node_before_position->next == NULL) {
     return;
   }
@@ -87,7 +91,7 @@ void delete(struct List *list, int position) {
   free(node_to_be_deleted);
 }
 
-int length(struct List *list) {
+int _list_length(struct List *list) {
   struct Node *node = list->head;
   int count = 0;
   while (node != NULL) {
@@ -97,14 +101,14 @@ int length(struct List *list) {
   return count;
 }
 
-void print(struct List *list) {
-  for (int index = 0; index < length(list); index++) {
-    printf("[%d]->%d\n", index, get(list, index)->value);
+void _list_print(struct List *list) {
+  for (int index = 0; index < _list_length(list); index++) {
+    printf("[%d]->%d\n", index, _list_get(list, index)->value);
   }
 }
 
-void free_list(struct List *list) {
-  int list_length = length(list);
+void _list_free(struct List *list) {
+  int list_length = _list_length(list);
   struct Node *node = list->head;
   int count = 0;
   while (node != NULL) {
@@ -116,7 +120,7 @@ void free_list(struct List *list) {
   free(list);
 }
 
-void reverse(struct List *list) {
+void _list_reverse(struct List *list) {
   struct Node *prev, *current, *next;
   prev = NULL;
   current = list->head;
@@ -129,7 +133,7 @@ void reverse(struct List *list) {
   list->head = prev;
 }
 
-void concat(struct List *first_list, struct List *second_list) {
+void _list_concat(struct List *first_list, struct List *second_list) {
   struct Node *node = first_list->head;
   while (node->next != NULL) {
     node = node->next;
@@ -137,15 +141,31 @@ void concat(struct List *first_list, struct List *second_list) {
   node->next = second_list->head;
 }
 
+struct List *create_list(struct Node *head) {
+  struct List *list = malloc(sizeof(struct List));
+  list->head = head;
+  list->get = &_list_get;
+  list->push = &_list_push;
+  list->unshift = &_list_unshift;
+  list->insert = &_list_insert;
+  list->delete = &_list_delete;
+  list->length = &_list_length;
+  list->print = &_list_print;
+  list->free = &_list_free;
+  list->reverse = &_list_reverse;
+  list->concat = &_list_concat;
+  return list;
+}
+
 int main() {
-  struct List *list = new_list(new_node(1));
-  push(list, 2);
-  push(list, 3);
-  struct List *second_list = new_list(new_node(4));
-  push(second_list, 5);
-  push(second_list, 6);
-  concat(list, second_list);
-  reverse(list);
-  print(list);
-  free_list(list);
+  struct List *list = create_list(create_node(1));
+  list->push(list, 2);
+  list->push(list, 3);
+  struct List *second_list = create_list(create_node(4));
+  second_list->push(second_list, 5);
+  second_list->push(second_list, 6);
+  list->concat(list, second_list);
+  list->reverse(list);
+  list->print(list);
+  list->free(list);
 }
