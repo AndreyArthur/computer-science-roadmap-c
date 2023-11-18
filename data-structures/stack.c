@@ -13,6 +13,7 @@ struct Stack {
   int(*peek)(struct Stack *stack);
   int(*is_empty)(struct Stack *stack);
   int(*size)(struct Stack *stack);
+  void(*free)(struct Stack *stack);
 };
 
 struct Node *_create_node(int value) {
@@ -71,6 +72,15 @@ int _stack_size(struct Stack *stack) {
   return count;
 }
 
+void _stack_free(struct Stack *stack) {
+  int counter = stack->size(stack);
+  while (counter > 0) {
+    stack->pop(stack);
+    counter--;
+  }
+  free(stack);
+}
+
 struct Stack *create_stack() {
   struct Stack *stack = (struct Stack *)malloc(sizeof(struct Stack));
   stack->push = &_stack_push;
@@ -78,5 +88,6 @@ struct Stack *create_stack() {
   stack->peek = &_stack_peek;
   stack->is_empty = &_stack_is_empty;
   stack->size = &_stack_size;
+  stack->free = &_stack_free;
   return stack;
 }
