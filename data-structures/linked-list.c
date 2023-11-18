@@ -59,12 +59,12 @@ void _list_unshift(struct List *list, int value) {
 
 void _list_insert(struct List *list, int position, int value) {
   if (position <= 0) {
-    _list_unshift(list, value);
+    list->unshift(list, value);
     return;
   }
   struct Node *node_before_position = _list_get(list, position - 1);
   if (node_before_position == NULL || node_before_position->next == NULL) {
-    _list_push(list, value);
+    list->push(list, value);
     return;
   }
   struct Node *node_to_be_inserted = create_node(value);
@@ -82,7 +82,7 @@ void _list_delete(struct List *list, int position) {
     free(head);
     return;
   }
-  struct Node *node_before_position = _list_get(list, position - 1);
+  struct Node *node_before_position = list->get(list, position - 1);
   if (node_before_position == NULL || node_before_position->next == NULL) {
     return;
   }
@@ -102,13 +102,13 @@ int _list_length(struct List *list) {
 }
 
 void _list_print(struct List *list) {
-  for (int index = 0; index < _list_length(list); index++) {
-    printf("[%d]->%d\n", index, _list_get(list, index)->value);
+  for (int index = 0; index < list->length(list); index++) {
+    printf("[%d]->%d\n", index, list->get(list, index)->value);
   }
 }
 
 void _list_free(struct List *list) {
-  int list_length = _list_length(list);
+  int list_length = list->length(list);
   struct Node *node = list->head;
   int count = 0;
   while (node != NULL) {
