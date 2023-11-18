@@ -156,16 +156,3 @@ struct List *create_list(struct Node *head) {
   list->concat = &_list_concat;
   return list;
 }
-
-int main() {
-  struct List *list = create_list(create_node(1));
-  list->push(list, 2);
-  list->push(list, 3);
-  struct List *second_list = create_list(create_node(4));
-  second_list->push(second_list, 5);
-  second_list->push(second_list, 6);
-  list->concat(list, second_list);
-  list->reverse(list);
-  list->print(list);
-  list->free(list);
-}
