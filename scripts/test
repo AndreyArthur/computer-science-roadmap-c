@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <path_to_test_file.c>"
+    exit 1
+fi
+
+test_file="$1"
+
+if [ ! -f "$test_file" ]; then
+    echo "Error: Test file '$test_file' not exists."
+    exit 1
+fi
+
+rm -rf ./__test
+gcc -o __test "$test_file" && ./__test
+rm -rf ./__test
