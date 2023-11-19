@@ -17,7 +17,7 @@ struct Stack {
 };
 
 struct Node *_create_node(int value) {
-  struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+  struct Node *node = malloc(sizeof(struct Node));
   node->value = value;
   return node;
 }
@@ -82,7 +82,7 @@ void _stack_free(struct Stack *stack) {
 }
 
 struct Stack *create_stack() {
-  struct Stack *stack = (struct Stack *)malloc(sizeof(struct Stack));
+  struct Stack *stack = malloc(sizeof(struct Stack));
   stack->push = &_stack_push;
   stack->pop = &_stack_pop;
   stack->peek = &_stack_peek;
