@@ -1,5 +1,5 @@
 #include "../test.c"
-#include "../../data-structures/binary-tree.c"
+#include "../../data-structures/binary-search-tree.c"
 
 int test_create_bynary_tree() {
   struct BinaryTree *tree = create_binary_tree();
