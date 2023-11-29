@@ -15,21 +15,21 @@ struct Queue {
   int(*size)(struct Queue *queue);
 };
 
-struct Node *_create_node(int value) {
+static struct Node *create_node(int value) {
   struct Node *node = malloc(sizeof(struct Node));
   node->value = value;
   return node;
 }
 
-int _queue_is_empty(struct Queue *queue) {
+static int queue_is_empty(struct Queue *queue) {
   if (queue->tail == NULL) {
     return 1;
   }
   return 0;
 }
 
-void _queue_enqueue(struct Queue *queue, int value) {
-  struct Node *node = _create_node(value);
+static void queue_enqueue(struct Queue *queue, int value) {
+  struct Node *node = create_node(value);
   if (queue->is_empty(queue)) {
     queue->tail = node;
     return;
@@ -38,7 +38,7 @@ void _queue_enqueue(struct Queue *queue, int value) {
   queue->tail = node;
 }
 
-int _queue_peek(struct Queue *queue) {
+static int queue_peek(struct Queue *queue) {
   if (queue->is_empty(queue)) {
     return 0;
   }
@@ -49,7 +49,7 @@ int _queue_peek(struct Queue *queue) {
   return node->value;
 }
 
-void _queue_dequeue(struct Queue *queue) {
+static void queue_dequeue(struct Queue *queue) {
   if (queue->is_empty(queue)) {
     return;
   }
@@ -69,7 +69,7 @@ void _queue_dequeue(struct Queue *queue) {
   node = NULL;
 }
 
-int _queue_size(struct Queue *queue) {
+static int queue_size(struct Queue *queue) {
   int count = 0;
   struct Node *node = queue->tail;
   while (node != NULL) {
@@ -81,11 +81,11 @@ int _queue_size(struct Queue *queue) {
 
 struct Queue *create_queue() {
   struct Queue *queue = malloc(sizeof(struct Queue));
-  queue->is_empty = &_queue_is_empty;
-  queue->enqueue = &_queue_enqueue;
-  queue->peek = &_queue_peek;
-  queue->dequeue = &_queue_dequeue;
-  queue->size = &_queue_size;
+  queue->is_empty = &queue_is_empty;
+  queue->enqueue = &queue_enqueue;
+  queue->peek = &queue_peek;
+  queue->dequeue = &queue_dequeue;
+  queue->size = &queue_size;
   return queue;
 }
 

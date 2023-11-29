@@ -18,7 +18,7 @@ struct HashTable {
   int(*contains)(struct HashTable *hashtable, char *key);
 };
 
-int _djb2(char *key) {
+static int djb2(char *key) {
   int hash_number = 5381;
   char current_character = '1';
   for (int index = 0; current_character; index++) {
@@ -28,17 +28,17 @@ int _djb2(char *key) {
   return hash_number % HASH_SIZE;
 }
 
-struct Node *_create_node(char *key, char *value) {
+static struct Node *create_node(char *key, char *value) {
   struct Node *node = malloc(sizeof(struct Node));
   node->key = key;
   node->value = value;
   return node;
 }
 
-void _hashtable_set(struct HashTable *hashtable, char *key, char *value) {
-  int position = _djb2(key);
+static void hashtable_set(struct HashTable *hashtable, char *key, char *value) {
+  int position = djb2(key);
   if (hashtable->list[position] == NULL) {
-    hashtable->list[position] = _create_node(key, value);
+    hashtable->list[position] = create_node(key, value);
     return;
   }
   struct Node *node = hashtable->list[position];
@@ -52,11 +52,11 @@ void _hashtable_set(struct HashTable *hashtable, char *key, char *value) {
     previous = node;
     node = node->next;
   }
-  previous->next = _create_node(key, value);
+  previous->next = create_node(key, value);
 }
 
-char *_hashtable_get(struct HashTable *hashtable, char *key) {
-  int position = _djb2(key);
+static char *hashtable_get(struct HashTable *hashtable, char *key) {
+  int position = djb2(key);
   if (hashtable->list[position] == NULL) {
     return "";
   }
@@ -71,8 +71,8 @@ char *_hashtable_get(struct HashTable *hashtable, char *key) {
   return "";
 }
 
-void _hashtable_delete(struct HashTable *hashtable, char *key) {
-  int position = _djb2(key);
+static void hashtable_delete(struct HashTable *hashtable, char *key) {
+  int position = djb2(key);
   if (hashtable->list[position] == NULL) {
     return;
   }
@@ -108,8 +108,8 @@ void _hashtable_delete(struct HashTable *hashtable, char *key) {
   }
 }
 
-int _hashtable_contains(struct HashTable *hashtable, char *key) {
-  int position = _djb2(key);
+static int hashtable_contains(struct HashTable *hashtable, char *key) {
+  int position = djb2(key);
   if (hashtable->list[position] == NULL) {
     return 0;
   }
@@ -126,10 +126,10 @@ int _hashtable_contains(struct HashTable *hashtable, char *key) {
 
 struct HashTable *create_hashtable() {
   struct HashTable *hashtable = malloc(sizeof(struct HashTable));
-  hashtable->set = &_hashtable_set;
-  hashtable->get = &_hashtable_get;
-  hashtable->delete = &_hashtable_delete;
-  hashtable->contains = &_hashtable_contains;
+  hashtable->set = &hashtable_set;
+  hashtable->get = &hashtable_get;
+  hashtable->delete = &hashtable_delete;
+  hashtable->contains = &hashtable_contains;
   return hashtable;
 }
 

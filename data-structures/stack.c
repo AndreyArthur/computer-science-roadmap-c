@@ -16,13 +16,13 @@ struct Stack {
   void(*free)(struct Stack *stack);
 };
 
-struct Node *_create_node(int value) {
+static struct Node *create_node(int value) {
   struct Node *node = malloc(sizeof(struct Node));
   node->value = value;
   return node;
 }
 
-int _stack_is_empty(struct Stack *stack) {
+static int stack_is_empty(struct Stack *stack) {
   if (stack->head == NULL) {
     return 1;
   } else {
@@ -30,15 +30,15 @@ int _stack_is_empty(struct Stack *stack) {
   }
 }
 
-int _stack_peek(struct Stack *stack) {
+static int stack_peek(struct Stack *stack) {
   if (!stack->is_empty(stack)) {
     return stack->head->value;
   }
   return 0;
 }
 
-void _stack_push(struct Stack *stack, int value) {
-  struct Node *node = _create_node(value);
+static void stack_push(struct Stack *stack, int value) {
+  struct Node *node = create_node(value);
   if (stack->is_empty(stack)) {
     stack->head = node;
     return;
@@ -47,7 +47,7 @@ void _stack_push(struct Stack *stack, int value) {
   stack->head = node;
 }
 
-void _stack_pop(struct Stack *stack) {
+static void stack_pop(struct Stack *stack) {
   if (stack->is_empty(stack)) {
     return;
   }
@@ -62,7 +62,7 @@ void _stack_pop(struct Stack *stack) {
   free(head);
 }
 
-int _stack_size(struct Stack *stack) {
+static int stack_size(struct Stack *stack) {
   struct Node *node = stack->head;
   int count = 0;
   while (node != NULL) {
@@ -72,7 +72,7 @@ int _stack_size(struct Stack *stack) {
   return count;
 }
 
-void _stack_free(struct Stack *stack) {
+static void stack_free(struct Stack *stack) {
   int counter = stack->size(stack);
   while (counter > 0) {
     stack->pop(stack);
@@ -83,11 +83,11 @@ void _stack_free(struct Stack *stack) {
 
 struct Stack *create_stack() {
   struct Stack *stack = malloc(sizeof(struct Stack));
-  stack->push = &_stack_push;
-  stack->pop = &_stack_pop;
-  stack->peek = &_stack_peek;
-  stack->is_empty = &_stack_is_empty;
-  stack->size = &_stack_size;
-  stack->free = &_stack_free;
+  stack->push = &stack_push;
+  stack->pop = &stack_pop;
+  stack->peek = &stack_peek;
+  stack->is_empty = &stack_is_empty;
+  stack->size = &stack_size;
+  stack->free = &stack_free;
   return stack;
 }
