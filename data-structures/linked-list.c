@@ -120,17 +120,21 @@ static void list_free(struct List *list) {
   free(list);
 }
 
-static void list_reverse(struct List *list) {
-  struct Node *prev, *current, *next;
-  prev = NULL;
-  current = list->head;
-  while (current != NULL) {
-    next = current->next;
-    current->next = prev;
-    prev = current;
-    current = next;
+static struct Node *list_reverse_recursion(
+  struct Node *node,
+  struct Node *previous
+) {
+  if (node == NULL) {
+    return previous;
   }
-  list->head = prev;
+  struct Node *next_node = node->next;
+  node->next = previous;
+  return list_reverse_recursion(next_node, node);
+}
+
+static void list_reverse(struct List *list) {
+  struct Node *head = list_reverse_recursion(list->head, NULL);
+  list->head = head;
 }
 
 static void list_concat(struct List *first_list, struct List *second_list) {
